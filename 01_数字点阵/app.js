@@ -11,8 +11,21 @@ var DIGIT_SIZE = [digit[0].length,digit[0][0].length];
 var COLON_SIZE = [digit[10].length,digit[10][0].length];
 var DIGIT_SPACE = 30;
 
-var END_TIME = new Date(2016,5,25,18,47,10);
+var END_TIME = new Date(2016,5,26,18,47,10);
 var curShowTimeSeconds = getCurShowTimeSeconds();
+
+var colorList=["#1abc9c","#2ecc71","#16a085",
+    "#f1c40f","#e67e22","#f39c12","#2980b9",
+    "#8e44ad","#34495e","#c0392b","#7f8c8d"];
+
+var FREE_FALLER = {
+    x:0,
+    y:0,
+    vx:100,
+    vy:100,
+    ax:0,
+    ay:10
+}
 
 function getCurShowTimeSeconds() {
     var curTime = new Date();
@@ -28,11 +41,33 @@ window.onload = function () {
     canvas.width = WINDOW_WIDTH;
     canvas.height = WINDOW_HEIGHT;
 
-    render(context);
+    // render(context);
+
+    setInterval(
+        function () {
+            render(context);
+            renderBall(context,FREE_FALLER.x,FREE_FALLER.y);
+            update();
+        },50
+    );
+
+
     // console.log(END_TIME.getTime());
 }
 
+function renderBall(cxt,x,y) {
+    cxt.beginPath();
+    cxt.arc(x,y,RADIUS,0,2*Math.PI);
+    cxt.closePath();
+
+    cxt.fillStyle = 'rgb(0, 102, 153)';
+
+    cxt.fill();
+}
+
+
 function render(cxt) {
+    cxt.clearRect(0,0,WINDOW_WIDTH,WINDOW_HEIGHT);
     // console.log(curShowTimeSeconds);
     var hours = parseInt(curShowTimeSeconds/3600);
     // console.log(hours);
@@ -70,6 +105,39 @@ function renderDigit(startX, startY, curDigit, cxt) {
         }
     }
 }
+
+function update() {
+
+    // var nextShowTimeSeconds = getCurShowTimeSeconds();
+    // var noxtHours = parseInt(curShowTimeSeconds/3600);
+    // var noxtMinutes = parseInt(curShowTimeSeconds%3600/60);
+    // var noxtSeconds = curShowTimeSeconds%60;
+    // if(){
+    //
+    // }
+    curShowTimeSeconds = getCurShowTimeSeconds();
+    FREE_FALLER.x += 0.2*FREE_FALLER.vx;
+    FREE_FALLER.y += 0.2*FREE_FALLER.vy;
+    FREE_FALLER.vy += 0.2*FREE_FALLER.ay;
+    if(FREE_FALLER.y>WINDOW_HEIGHT-RADIUS||FREE_FALLER.y<RADIUS){
+        FREE_FALLER.vy = -FREE_FALLER.vy;
+    }
+    if(FREE_FALLER.x>WINDOW_WIDTH-RADIUS||FREE_FALLER.x<RADIUS){
+        FREE_FALLER.vx = -FREE_FALLER.vx;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
